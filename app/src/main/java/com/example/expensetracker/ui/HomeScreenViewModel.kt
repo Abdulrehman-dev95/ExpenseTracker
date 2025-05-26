@@ -22,15 +22,15 @@ class HomeScreenViewModel(private val appRepositories: AppRepositories) : ViewMo
 
     private fun loadData() {
         viewModelScope.launch {
-            val list = appRepositories.getList().collect { expenseList ->
+            appRepositories.getList().collect { expenseList ->
                 val expense = expenseList.filter {
-                    it.type == "expense"
+                    it.type == "Expense"
                 }.sumOf {
                     it.amount
                 }
 
                 val income = expenseList.filter {
-                    it.type == "income"
+                    it.type == "Income"
                 }.sumOf {
                     it.amount
 
@@ -61,7 +61,7 @@ data class HomeScreenUi(
     val expenseList: List<ExpenseDetails> = emptyList(),
     val balance: String = "0.0",
     val expense: String = "0.0",
-    val income: String = "0.o"
+    val income: String = "0.0"
 )
 
 
@@ -70,8 +70,9 @@ fun Expense.toExpenseDetails(): ExpenseDetails {
         id = id,
         name = name,
         amount = amount.toString(),
-        date = date.toString(),
+        date = date,
         type = type,
+        category = category
     )
 
 

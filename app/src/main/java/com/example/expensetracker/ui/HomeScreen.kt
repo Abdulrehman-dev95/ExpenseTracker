@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Surface
@@ -34,6 +33,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expensetracker.R
 import com.example.expensetracker.ui.widgets.CustomText
+import com.example.expensetracker.utils.Utils
 
 @Composable
 fun HomeScreen(
@@ -249,14 +249,14 @@ fun TransactionItem(
         }
 
         CustomText(
-            text = if (type == "income") {
+            text = if (type == "Income") {
                 "+$amount"
             } else {
                 "-$amount"
             },
             fontWeight = FontWeight.Bold,
-            color = if (type == "income") {
-                Color.Green
+            color = if (type == "Income") {
+                Color.Cyan
             } else {
                 Color.Red
             }, fontSize = 20.sp,
@@ -284,7 +284,7 @@ fun TransactionList(modifier: Modifier = Modifier, expenseDetails: List<ExpenseD
         items(expenseDetails.size, key = { expenseDetails[it].id }) {
             TransactionItem(
                 amount = expenseDetails[it].amount,
-                date = expenseDetails[it].date,
+                date = Utils.dateFormater(expenseDetails[it].date),
                 transaction = expenseDetails[it].name,
                 categories = expenseDetails[it].category,
                 type = expenseDetails[it].type
@@ -299,12 +299,6 @@ fun TransactionList(modifier: Modifier = Modifier, expenseDetails: List<ExpenseD
 
 }
 
-
-@Composable
-fun BottomNavigationBar(modifier: Modifier = Modifier) {
-
-
-}
 
 
 @Preview(showSystemUi = true, showBackground = true)

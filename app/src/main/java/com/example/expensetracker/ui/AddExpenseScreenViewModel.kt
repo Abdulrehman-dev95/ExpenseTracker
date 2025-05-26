@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.expensetracker.data.AppRepositories
 import com.example.expensetracker.data.Expense
-import com.example.expensetracker.utils.Utils
 import kotlinx.coroutines.launch
 
 class AddExpenseScreenViewModel(private val appRepositories: AppRepositories) : ViewModel() {
@@ -24,9 +23,9 @@ class AddExpenseScreenViewModel(private val appRepositories: AppRepositories) : 
     }
 
     fun onDateChange(date: Long) {
-        val newDate = Utils.dateFormater(date = date)
+
         val expenseDetails = addExpenseScreenState.expenseDetails.copy(
-            date = newDate
+            date = date
         )
         updateExpenseDetails(expenseDetails)
     }
@@ -35,7 +34,7 @@ class AddExpenseScreenViewModel(private val appRepositories: AppRepositories) : 
         return !with(addExpenseScreenState) {
             expenseDetails.name.isBlank() ||
                     expenseDetails.amount.isBlank() ||
-                    expenseDetails.date.isBlank() ||
+                    expenseDetails.date.toString().isBlank() ||
                     expenseDetails.category.isBlank() ||
                     expenseDetails.type.isBlank()
         }
@@ -59,7 +58,7 @@ data class ExpenseDetails(
     val id: Int = 0,
     val name: String = "",
     val amount: String = "",
-    val date: String = "",
+    val date: Long = 0L,
     val category: String = "",
     val type: String = ""
 
@@ -71,7 +70,7 @@ fun ExpenseDetails.toExpense(): Expense {
         id = id,
         name = name,
         amount = amount.toDouble(),
-        date = date.toLong(),
+        date = date,
         type = type,
         category = category,
     )

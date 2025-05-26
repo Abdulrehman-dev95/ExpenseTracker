@@ -16,9 +16,6 @@ sealed class Screen(val route: String) {
 @Composable
 fun AppNavHost(navHostController: NavHostController, modifier: Modifier = Modifier) {
 
-
-
-
     NavHost(
         navController = navHostController,
         startDestination = Screen.Home.route,
@@ -29,7 +26,11 @@ fun AppNavHost(navHostController: NavHostController, modifier: Modifier = Modifi
         }
 
         composable(route = Screen.Add.route) {
-            AddExpenseScreen()
+            AddExpenseScreen(
+                navigateUp = { navHostController.navigateUp() },
+                navigateBack = { navHostController.navigate(Screen.Home.route) }
+
+            )
 
         }
     }

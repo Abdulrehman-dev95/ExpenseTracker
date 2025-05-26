@@ -57,13 +57,17 @@ import com.example.expensetracker.R
 import com.example.expensetracker.ui.theme.ExpenseTrackerTheme
 import com.example.expensetracker.ui.theme.interFont
 import com.example.expensetracker.ui.widgets.CustomText
+import com.example.expensetracker.utils.Utils
 import java.util.Currency
 import java.util.Locale
 
 @Composable
 fun AddExpenseScreen(
     modifier: Modifier = Modifier,
-    viewModel: AddExpenseScreenViewModel = viewModel(factory = ViewModelInitializer.factory)
+    viewModel: AddExpenseScreenViewModel = viewModel(factory = ViewModelInitializer.factory),
+    navigateUp: () -> Unit,
+    navigateBack: () -> Unit
+
 ) {
 
     Surface(modifier = modifier.fillMaxSize()) {
@@ -85,7 +89,13 @@ fun AddExpenseScreen(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                     contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier
+                        .size(28.dp)
+                        .clickable(
+                            onClick = {
+                                navigateUp()
+                            }
+                        )
 
 
                 )
@@ -110,6 +120,7 @@ fun AddExpenseScreen(
                     viewModel.onDateChange(it)
                 }, onAddButtonClick = {
                     viewModel.onAddButtonClick()
+                    navigateBack()
                 },
                 enabled = viewModel.isEnabled()
             )
@@ -215,7 +226,7 @@ fun AddExpenseLayout(
 
             ExpenseDatePicker(
                 onDateSelected = onDateChange,
-                selectedDate = expenseDetails.date
+                selectedDate = Utils.dateFormater(expenseDetails.date)
             )
             Spacer(modifier = Modifier.padding(vertical = 8.dp))
             CustomText(
@@ -466,7 +477,10 @@ fun AddButton(modifier: Modifier = Modifier, isEnabled: Boolean, onAddClick: () 
 @Composable
 fun AddExpenseScreenPreview() {
     ExpenseTrackerTheme {
-        AddExpenseScreen()
+        AddExpenseScreen(
+            navigateUp = {},
+            navigateBack = {}
+        )
     }
 
 

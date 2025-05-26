@@ -4,16 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -22,11 +24,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.expensetracker.ui.AppNavHost
 import com.example.expensetracker.ui.Screen
@@ -46,22 +51,32 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainApp(navController: NavHostController = rememberNavController()) {
-    val currentRoute = navController.currentBackStackEntry?.destination?.route ?: "home"
+    val  currentBackStackEntry = navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry.value?.destination?.route?: "home"
+    val showBottomBar = currentRoute != Screen.Add.route
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
+
         bottomBar = {
-            BottomAppBar() {
+            AnimatedVisibility(
+                visible = showBottomBar
 
-            }
+            )
+            { BottomBar(
+                onHomeClick = { navController.navigate(Screen.Home.route) },
+                onGraphClick = {
+                    navController.navigate(Screen.Stats.route)
+                },
+                currentRoute = currentRoute
+            )}
         }, floatingActionButton = {
-            FabInBottomBar {
-                navController.navigate(Screen.Add.route)
+            AnimatedVisibility(visible = showBottomBar) {
+                FabInBottomBar {
+                    navController.navigate(Screen.Add.route)
+                }
             }
 
-        }
-
-
-        ,
+        },
         floatingActionButtonPosition = FabPosition.Center
     ) {
         AppNavHost(navHostController = navController, modifier = Modifier.padding(it))
@@ -72,30 +87,32 @@ fun MainApp(navController: NavHostController = rememberNavController()) {
 
 @Composable
 fun BottomBar(
-    modifier: Modifier = Modifier,
     currentRoute: String,
-    onAddClick: () -> Unit,
     onGraphClick: () -> Unit,
     onHomeClick: () -> Unit
 ) {
-BottomAppBar() {
-    IconButton(onClick = {}) {
-        Icon(
-            modifier = Modifier.size(48.dp),
-            imageVector = Icons.Default.Home,
-            contentDescription = "Home",
-            tint = if (currentRoute == Screen.Home.route) MaterialTheme.colorScheme.primary else Color.Gray
-        )
+    BottomAppBar(tonalElevation = 12.dp, containerColor = MaterialTheme.colorScheme.surface) {
+        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp)) {
+            IconButton(onClick = onHomeClick, modifier = Modifier.size(56.dp)) {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = "Home",
+                    tint = if (currentRoute == Screen.Home.route) Color(0xFF438883) else Color.White
+                    , modifier = Modifier.size(56.dp)
+                )
+            }
+            IconButton(onClick = onGraphClick, modifier = Modifier.size(56.dp)) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_stat),
+                    contentDescription = "Stats",
+                    tint = if (currentRoute == Screen.Stats.route) Color(0xFF438883) else Color.White,
+                    modifier = Modifier.size(56.dp)
+                )
+            }
+        }
     }
-    Spacer(Modifier.weight(1f, true))
-    IconButton(onClick = {  }) {
-        Icon(modifier = Modifier.size(48.dp),
-            imageVector = Icons.AutoMirrored.Filled.List,
-            contentDescription = "Stats",
-            tint = if (currentRoute == Screen.Stats.route) MaterialTheme.colorScheme.primary else Color.Gray
-        )
-    }
-}
 
 }
 
@@ -104,8 +121,13 @@ BottomAppBar() {
 fun FabInBottomBar(modifier: Modifier = Modifier, onClick: () -> Unit) {
     FloatingActionButton(
         onClick = onClick,
-        modifier = modifier,
-        containerColor = Color.Transparent,
+        modifier = modifier
+            .size(80.dp)
+            .offset(
+                y = (44).dp
+            ),
+        containerColor = Color(0xFF438883),
+        contentColor = contentColorFor(Color.White),
         shape = CircleShape,
         elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(
             defaultElevation = 4.dp
@@ -114,7 +136,8 @@ fun FabInBottomBar(modifier: Modifier = Modifier, onClick: () -> Unit) {
         Icon(
             imageVector = Icons.Default.Add,
             tint = Color.White,
-            contentDescription = "Add Button"
+            contentDescription = "Add Button",
+            modifier = Modifier.size(32.dp)
         )
 
     }
