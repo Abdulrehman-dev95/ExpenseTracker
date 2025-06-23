@@ -22,6 +22,12 @@ object ViewModelInitializer {
             )
 
         }
+        initializer {
+            StatsScreenViewModel(
+                appRepositories = expenseTrackerApplication().container.appRepositories
+            )
+
+        }
 
 
     }

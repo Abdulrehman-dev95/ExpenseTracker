@@ -51,8 +51,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainApp(navController: NavHostController = rememberNavController()) {
-    val  currentBackStackEntry = navController.currentBackStackEntryAsState()
-    val currentRoute = currentBackStackEntry.value?.destination?.route?: "home"
+    val currentBackStackEntry = navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry.value?.destination?.route ?: "home"
     val showBottomBar = currentRoute != Screen.Add.route
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -62,13 +62,15 @@ fun MainApp(navController: NavHostController = rememberNavController()) {
                 visible = showBottomBar
 
             )
-            { BottomBar(
-                onHomeClick = { navController.navigate(Screen.Home.route) },
-                onGraphClick = {
-                    navController.navigate(Screen.Stats.route)
-                },
-                currentRoute = currentRoute
-            )}
+            {
+                BottomBar(
+                    onHomeClick = { navController.navigate(Screen.Home.route) },
+                    onGraphClick = {
+                        navController.navigate(Screen.Stats.route)
+                    },
+                    currentRoute = currentRoute
+                )
+            }
         }, floatingActionButton = {
             AnimatedVisibility(visible = showBottomBar) {
                 FabInBottomBar {
@@ -92,15 +94,17 @@ fun BottomBar(
     onHomeClick: () -> Unit
 ) {
     BottomAppBar(tonalElevation = 12.dp, containerColor = MaterialTheme.colorScheme.surface) {
-        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp)) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp)
+        ) {
             IconButton(onClick = onHomeClick, modifier = Modifier.size(56.dp)) {
                 Icon(
                     imageVector = Icons.Default.Home,
                     contentDescription = "Home",
-                    tint = if (currentRoute == Screen.Home.route) Color(0xFF438883) else Color.White
-                    , modifier = Modifier.size(56.dp)
+                    tint = if (currentRoute == Screen.Home.route) Color(0xFF438883) else Color.White,
+                    modifier = Modifier.size(56.dp)
                 )
             }
             IconButton(onClick = onGraphClick, modifier = Modifier.size(56.dp)) {

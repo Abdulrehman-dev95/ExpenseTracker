@@ -33,6 +33,10 @@ fun AppNavHost(navHostController: NavHostController, modifier: Modifier = Modifi
             )
 
         }
+         composable(route = Screen.Stats.route) {
+             StatsScreen()
+         }
+
     }
 
 
