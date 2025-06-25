@@ -1,5 +1,6 @@
 package com.example.expensetracker.data
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -11,4 +12,11 @@ data class Expense(
     val date: Long,
     val type: String,
     val category: String,
+)
+
+data class ExpenseSummary(
+    val type: String,
+    val date: Long,
+    @ColumnInfo(name = "total_amount") val totalAmount: Double
+
 )

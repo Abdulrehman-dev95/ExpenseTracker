@@ -7,7 +7,7 @@ interface AppRepositories {
     suspend fun addExpense(expense: Expense)
     suspend fun updateExpense(expense: Expense)
     suspend fun deleteExpense(id: Int)
-    fun getExpenseByType(type: String = "Expense"): Flow<List<Expense>>
+    fun getExpenseByType(type: String = "Expense"): Flow<List<ExpenseSummary>>
 }
 
 class AppRepositoriesImpl(private val expenseDao: ExpenseDao) : AppRepositories {
@@ -28,7 +28,7 @@ class AppRepositoriesImpl(private val expenseDao: ExpenseDao) : AppRepositories 
         expenseDao.deleteExpense(id)
     }
 
-    override fun getExpenseByType(type: String): Flow<List<Expense>> {
+    override fun getExpenseByType(type: String): Flow<List<ExpenseSummary>> {
     return expenseDao.getExpenseByType(type)
     }
 }

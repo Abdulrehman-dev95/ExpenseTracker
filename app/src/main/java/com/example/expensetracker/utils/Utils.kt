@@ -6,7 +6,7 @@ import java.util.Date
 import java.util.Locale
 
 object Utils {
-    fun dateFormater(date: Long): String {
+    fun dateFormatter(date: Long): String {
         val simpleDateFormat = SimpleDateFormat("dd/MM/yyy", Locale.getDefault())
         val newDate = simpleDateFormat.format(Date(date))
         return newDate
@@ -15,7 +15,12 @@ object Utils {
     fun currencyFormatter(amount: Double): String {
         val format = NumberFormat.getCurrencyInstance(Locale.getDefault())
         return format.format(amount)
+    }
 
+    fun dateFormatterForChart(date: Long): String {
+        val simpleDateFormat = SimpleDateFormat("dd-MMM", Locale.getDefault())
+        val newDate = simpleDateFormat.format(Date(date))
+        return newDate
 
     }
 

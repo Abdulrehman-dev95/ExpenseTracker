@@ -284,7 +284,7 @@ fun TransactionList(modifier: Modifier = Modifier, expenseDetails: List<ExpenseD
         items(expenseDetails.size, key = { expenseDetails[it].id }) {
             TransactionItem(
                 amount = expenseDetails[it].amount,
-                date = Utils.dateFormater(expenseDetails[it].date),
+                date = Utils.dateFormatter(expenseDetails[it].date),
                 transaction = expenseDetails[it].name,
                 categories = expenseDetails[it].category,
                 type = expenseDetails[it].type

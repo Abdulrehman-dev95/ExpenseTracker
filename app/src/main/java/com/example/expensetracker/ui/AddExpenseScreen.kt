@@ -226,7 +226,7 @@ fun AddExpenseLayout(
 
             ExpenseDatePicker(
                 onDateSelected = onDateChange,
-                selectedDate = Utils.dateFormater(expenseDetails.date)
+                selectedDate = Utils.dateFormatter(expenseDetails.date)
             )
             Spacer(modifier = Modifier.padding(vertical = 8.dp))
             CustomText(
