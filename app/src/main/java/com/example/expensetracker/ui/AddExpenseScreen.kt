@@ -326,9 +326,7 @@ fun ExpenseDatePicker(
         }
     }
     OutlinedTextField(
-        value = if (selectedDate.isBlank()) "Select Date*" else {
-            selectedDate
-        },
+        value = selectedDate.ifBlank { "Select Date*" },
         onValueChange = {},
         readOnly = true,
         enabled = false,

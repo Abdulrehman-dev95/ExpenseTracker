@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expensetracker.R
 import com.example.expensetracker.ui.widgets.CustomText
@@ -68,14 +69,12 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .constrainAs(nameRow) {
-                        top.linkTo(parent.top, margin = 32.dp)
+                        top.linkTo(parent.top, margin = 16.dp)
                         start.linkTo(parent.start, margin = 24.dp)
                         end.linkTo(parent.end)
                     }) {
-                Column(
-                    modifier = Modifier.weight(1f)
-
-                ) {
+                Column()
+                {
                     Spacer(modifier = Modifier.padding(vertical = 16.dp))
                     CustomText(
                         text = "Good Morning", fontSize = 16.sp,
@@ -102,11 +101,12 @@ fun HomeScreen(
 
             TransactionList(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .constrainAs(list) {
                         top.linkTo(card.bottom, margin = 24.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                        height = Dimension.fillToConstraints
                     },
                 expenseDetails = uiState.value.expenseList
 
@@ -270,7 +270,10 @@ fun TransactionItem(
 
 @Composable
 fun TransactionList(modifier: Modifier = Modifier, expenseDetails: List<ExpenseDetails>) {
-    LazyColumn(modifier = modifier.padding(horizontal = 8.dp), contentPadding = PaddingValues(bottom = 8.dp)) {
+    LazyColumn(
+        modifier = modifier.padding(horizontal = 8.dp),
+        contentPadding = PaddingValues(bottom = 8.dp)
+    ) {
         item {
             CustomText(
                 text = "Transaction History",
@@ -298,7 +301,6 @@ fun TransactionList(modifier: Modifier = Modifier, expenseDetails: List<ExpenseD
 
 
 }
-
 
 
 @Preview(showSystemUi = true, showBackground = true)

@@ -1,38 +1,37 @@
 package com.example.expensetracker.ui
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.expensetracker.data.AppRepositories
-import com.example.expensetracker.utils.Utils
 import com.github.mikephil.charting.data.Entry
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class StatsScreenViewModel(
-    appRepositories: AppRepositories
+    val appRepositories: AppRepositories
 ) : ViewModel() {
 
 
-
-    val chartEntries = mutableStateOf(
+    private val _chartEntries = MutableStateFlow(
         listOf<Entry>()
     )
+    val chartEntries = _chartEntries.asStateFlow()
 
 
-
-
-
-    init {
+    fun updateChartData(type: String = "Expense") {
         viewModelScope.launch {
-            appRepositories.getExpenseByType().collect { expenses ->
+            appRepositories.getExpenseByType(type).collect { expenses ->
                 val data = expenses.map {
                     Entry(it.date.toFloat(), it.totalAmount.toFloat())
                 }
-                chartEntries.value = data
+                _chartEntries.value = data
             }
         }
+    }
+
+    init {
+        updateChartData()
     }
 
 
