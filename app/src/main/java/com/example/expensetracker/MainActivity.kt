@@ -1,6 +1,7 @@
 package com.example.expensetracker
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -36,6 +37,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.expensetracker.ui.AppNavHost
 import com.example.expensetracker.ui.Screen
 import com.example.expensetracker.ui.theme.ExpenseTrackerTheme
+import com.google.android.gms.ads.MobileAds
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +56,8 @@ fun MainApp(navController: NavHostController = rememberNavController()) {
     val currentBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry.value?.destination?.route ?: "home"
     val showBottomBar = currentRoute != Screen.Add.route
+
+
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
 

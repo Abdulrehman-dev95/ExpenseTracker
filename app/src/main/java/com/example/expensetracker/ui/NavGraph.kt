@@ -22,20 +22,29 @@ fun AppNavHost(navHostController: NavHostController, modifier: Modifier = Modifi
         modifier = modifier
     ) {
         composable(Screen.Home.route) {
-            HomeScreen()
+            HomeScreen(
+            )
         }
 
         composable(route = Screen.Add.route) {
             AddExpenseScreen(
                 navigateUp = { navHostController.navigateUp() },
-                navigateBack = { navHostController.navigate(Screen.Home.route) }
-
+                navigateBack = {
+                    navHostController.navigate(Screen.Home.route)
+                    {
+                        popUpTo(Screen.Home.route) {
+                            inclusive = true
+                        }
+                    }
+                },
+                navigatePopBackStack = {
+                    navHostController.popBackStack()
+                }
             )
-
         }
-         composable(route = Screen.Stats.route) {
-             StatsScreen()
-         }
+        composable(route = Screen.Stats.route) {
+            StatsScreen()
+        }
 
     }
 

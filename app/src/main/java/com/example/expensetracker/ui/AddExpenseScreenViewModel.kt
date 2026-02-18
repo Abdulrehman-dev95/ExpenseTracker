@@ -1,5 +1,6 @@
 package com.example.expensetracker.ui
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -7,6 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.expensetracker.data.AppRepositories
 import com.example.expensetracker.data.Expense
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import kotlinx.coroutines.launch
 
 class AddExpenseScreenViewModel(private val appRepositories: AppRepositories) : ViewModel() {
@@ -15,6 +20,8 @@ class AddExpenseScreenViewModel(private val appRepositories: AppRepositories) : 
         AddExpenseUiState()
     )
         private set
+
+    var mInterstitialAd: InterstitialAd? = null
 
     fun updateExpenseDetails(expenseDetails: ExpenseDetails) {
         addExpenseScreenState = addExpenseScreenState.copy(
@@ -46,6 +53,26 @@ class AddExpenseScreenViewModel(private val appRepositories: AppRepositories) : 
             appRepositories.addExpense(addExpenseScreenState.expenseDetails.toExpense())
         }
     }
+
+    fun loadInterstitialAd(context: Context) {
+        val adRequest = AdRequest.Builder().build()
+
+        InterstitialAd.load(
+            context,
+            "ca-app-pub-3940256099942544/1033173712",
+            adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(p0: InterstitialAd) {
+                    mInterstitialAd = p0
+                }
+
+                override fun onAdFailedToLoad(p0: LoadAdError) {
+                    mInterstitialAd = null
+                }
+            })
+
+    }
+
 
     data class AddExpenseUiState(
         val expenseDetails: ExpenseDetails = ExpenseDetails(),

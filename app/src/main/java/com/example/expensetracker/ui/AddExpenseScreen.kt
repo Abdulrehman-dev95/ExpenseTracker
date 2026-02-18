@@ -1,5 +1,6 @@
 package com.example.expensetracker.ui
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -26,17 +27,18 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -58,17 +61,29 @@ import com.example.expensetracker.ui.theme.ExpenseTrackerTheme
 import com.example.expensetracker.ui.theme.interFont
 import com.example.expensetracker.ui.widgets.CustomText
 import com.example.expensetracker.utils.Utils
+import com.google.android.gms.ads.FullScreenContentCallback
 import java.util.Currency
 import java.util.Locale
+
+private const val AD_FREQUENCY = 3
 
 @Composable
 fun AddExpenseScreen(
     modifier: Modifier = Modifier,
     viewModel: AddExpenseScreenViewModel = viewModel(factory = ViewModelInitializer.factory),
     navigateUp: () -> Unit,
-    navigateBack: () -> Unit
-
+    navigateBack: () -> Unit,
+    navigatePopBackStack: () -> Unit
 ) {
+    val context = LocalContext.current
+    val activity = context as? Activity
+    var currentSaveCount = 0
+
+
+    LaunchedEffect(Unit) {
+        viewModel.loadInterstitialAd(context)
+    }
+
 
     Surface(modifier = modifier.fillMaxSize()) {
         Box {
@@ -120,7 +135,21 @@ fun AddExpenseScreen(
                     viewModel.onDateChange(it)
                 }, onAddButtonClick = {
                     viewModel.onAddButtonClick()
-                    navigateBack()
+                    currentSaveCount++
+
+                    if (viewModel.mInterstitialAd != null && activity != null && currentSaveCount % AD_FREQUENCY == 0) {
+                        viewModel.mInterstitialAd?.fullScreenContentCallback =
+                            object : FullScreenContentCallback() {
+                                override fun onAdDismissedFullScreenContent() {
+                                    navigateBack()
+                                    viewModel.mInterstitialAd = null
+                                    viewModel.loadInterstitialAd(context)
+                                }
+                            }
+                        viewModel.mInterstitialAd?.show(activity)
+                    } else {
+                        navigatePopBackStack()
+                    }
                 },
                 enabled = viewModel.isEnabled()
             )
@@ -420,7 +449,7 @@ fun ExpenseDropDownMenu(
                 null
             }, modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor(type = MenuAnchorType.PrimaryNotEditable)
+                .menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryNotEditable)
 
         )
         DropdownMenu(
@@ -477,7 +506,8 @@ fun AddExpenseScreenPreview() {
     ExpenseTrackerTheme {
         AddExpenseScreen(
             navigateUp = {},
-            navigateBack = {}
+            navigateBack = {},
+            navigatePopBackStack = {}
         )
     }
 

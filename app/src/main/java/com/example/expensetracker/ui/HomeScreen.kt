@@ -1,5 +1,6 @@
 package com.example.expensetracker.ui
 
+import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -29,13 +30,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.expensetracker.R
 import com.example.expensetracker.ui.widgets.CustomText
 import com.example.expensetracker.utils.Utils
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -48,8 +54,7 @@ fun HomeScreen(
         ConstraintLayout(
             modifier = Modifier.fillMaxSize()
         ) {
-            val (nameRow, card, list, topBar) = createRefs()
-
+            val (nameRow, card, list, topBar, adBanner) = createRefs()
 
             Box(modifier = Modifier.constrainAs(topBar) {
                 top.linkTo(parent.top)
@@ -98,27 +103,26 @@ fun HomeScreen(
                     end.linkTo(parent.end)
                 }
             )
+            BannerAd(modifier = Modifier.constrainAs(adBanner) {
+                top.linkTo(card.bottom, margin = 8.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            })
 
             TransactionList(
                 modifier = Modifier
                     .constrainAs(list) {
-                        top.linkTo(card.bottom, margin = 24.dp)
+                        top.linkTo(adBanner.bottom, margin = 16.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         bottom.linkTo(parent.bottom)
                         height = Dimension.fillToConstraints
                     },
                 expenseDetails = uiState.value.expenseList
-
-
             )
 
-
         }
-
-
     }
-
 }
 
 @Composable
@@ -228,8 +232,6 @@ fun TransactionItem(
                             R.drawable.money_bag_logo
                         }
                     }
-
-
                 ),
                 contentDescription = null,
                 modifier = Modifier.size(50.dp)
@@ -292,21 +294,30 @@ fun TransactionList(modifier: Modifier = Modifier, expenseDetails: List<ExpenseD
                 categories = expenseDetails[it].category,
                 type = expenseDetails[it].type
             )
-
-
         }
-
-
     }
+}
 
-
+@Composable
+fun BannerAd(
+    modifier: Modifier = Modifier
+) {
+    AndroidView(
+        modifier = modifier.fillMaxWidth(),
+        factory = { context ->
+            AdView(context).apply {
+                adUnitId = "ca-app-pub-3940256099942544/6300978111"
+                setAdSize(AdSize.BANNER)
+                loadAd(AdRequest.Builder().build())
+            }
+        }
+    )
 }
 
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun PreviewScreen() {
-    HomeScreen()
+    HomeScreen(
+    )
 }
-
-

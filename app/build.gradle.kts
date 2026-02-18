@@ -1,18 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.example.expensetracker"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.expensetracker"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -32,12 +31,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
     buildFeatures {
         compose = true
     }
+}
+
+kotlin {
+    jvmToolchain(11)
 }
 
 dependencies {
@@ -50,15 +50,17 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose-android:2.8.7")
-    implementation("androidx.navigation:navigation-compose:2.8.9")
-    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.mpandroidchart)
     //Room
-    implementation("androidx.room:room-runtime:${rootProject.extra["room_version"]}")
-    implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
-    ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
+    implementation(libs.play.services.ads)
 
 
     testImplementation(libs.junit)
@@ -69,5 +71,3 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
-
-
