@@ -1,12 +1,12 @@
 # 💰 Expense Tracker
 
-> A simple, modern Android expense management application built with Jetpack Compose for tracking income and expenses.
+A simple, modern Android expense management application built with Jetpack Compose to track income and expenses.
 
 ## 📱 App Screenshots
 
 | Home Screen                                          | Add Transaction                                    | Graph Screen                                       |
 | -------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------- |
-| <img src="app/screenshots/Home Screen.jpeg" width="250"/> | <img src="app/screenshots/Add Espense Screen.jpeg" width="250"/> | <img src="app/screenshots/Graph Screen.jpeg" width="250"/> |
+| <img src="app/screenshots/Home Screen.jpeg" width="250"/> | <img src="app/screenshots/Add Expense Screen.jpeg" width="250"/> | <img src="app/screenshots/Graph Screen.jpeg" width="250"/> |
 
 ## 📝 Description
 
